@@ -2228,16 +2228,6 @@ Proof.
     + rewrite Z.add_0_r. apply IHsz.
 Qed.
 
-Lemma Zdouble_div2 : forall (x : Z),
-  Z.double (Z.div2 x) = (x - Z.b2z (Z.odd x))%Z.
-Proof.
-  intros x.
-  destruct x.
-  - reflexivity.
-  - destruct p; reflexivity.
-  - destruct p; reflexivity.
-  Qed.
-
 Lemma inj_double : forall {sz} (x : Z),
   @Word.of_Z sz (Z.double x) = Word.double (@Word.of_Z sz x).
 Proof.
@@ -2258,38 +2248,6 @@ Proof.
       cbn.
       rewrite Z.sub_0_r.
       reflexivity.
-Qed.
-
-Lemma Zdiv2_mul_distr_l : forall (x y : Z),
-  Z.div2 (x * y)%Z = (Z.div2 x * y + Z.b2z (Z.odd x) * Z.div2 y)%Z.
-Proof.
-  intros x y.
-  rewrite (Z.div2_odd x) at 1.
-  rewrite Z.mul_add_distr_r, Zdiv2_add_distr.
-  rewrite <- Z.mul_assoc, <- Z.double_spec.
-  rewrite Zdiv2_double, Zdouble_not_odd.
-  rewrite Z.add_0_r.
-  unfold Z.b2z.
-  destruct (Z.odd x).
-  - rewrite 2 Z.mul_1_l.
-    reflexivity.
-  - rewrite 2 Z.mul_0_l.
-    reflexivity.
-Qed.
-
-Lemma Zdiv2_mul_distr : forall (x y : Z),
-  Z.div2 (x * y)%Z =
-  (Z.double (Z.div2 x * Z.div2 y)
-   + Z.b2z (Z.odd y) * Z.div2 x
-   + Z.b2z (Z.odd x) * Z.div2 y)%Z.
-Proof.
-  intros.
-  rewrite Zdiv2_mul_distr_l.
-  rewrite (Z.div2_odd y) at 1.
-  rewrite Z.mul_add_distr_l.
-  rewrite Z.mul_assoc, (Z.mul_comm _ 2), <- Z.mul_assoc, <- Z.double_spec.
-  rewrite (Z.mul_comm _ (Z.b2z _)).
-  reflexivity.
 Qed.
 
 Lemma inj_mul : forall {sz} (x y : Z),
